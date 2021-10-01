@@ -45,10 +45,11 @@ fclean  : dclean clean
 	@[ $(NB_I) -ne 0 ] && docker rmi -f $$($(_I)); true
 
 dclean  :
-	@$(call print,"- Clean data (mysql, wordpress, nginx logs)")
+	@$(call print,"- Clean data (mysql, wordpress, nginx logs, redis cache)")
 	@sudo rm -rf /data/mysql/*
 	@sudo rm -rf /data/www/etakouer.42.fr/*
 	@sudo rm -rf /data/log/nginx/*
+	@sudo rm -rf /data/redis/*
 
 re	: fclean all
 

@@ -99,11 +99,16 @@ services:
   redis:
     depends_on:
       - wordpress
-    image: redis:6.2.5
+    image: redis:${REDIS_V}
+    build:
+      context: ${REDIS_DIR}
+      args:
+        REDIS_V: ${REDIS_V}
     container_name: redis_c
     restart: on-failure
     volumes:
       - redis_data:/data
+      - ${REDIS_DIR}/conf/redis.conf:/etc/redis/redis.conf
     networks:
       - inception_network
 

@@ -14,9 +14,9 @@
 - [x] if first run of container
 - [x] sortir tout les fichiers config
 - [x] cli wordpress
-- [x] workdir wordpress
 - [x] ROOT\_PASS DB
 - [x] editor wp
+- [ ] workdir wordpress
 - [ ] persistance
 - [ ] ARG ..
 - [ ] generate ssl
@@ -26,6 +26,7 @@
 - [ ] ftp
 - [ ] redis
 - [ ] static-site
+- [ ] comment all
 
 #other
 - [ ] ip and network tests

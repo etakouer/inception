@@ -2,6 +2,8 @@ FROM debian:buster
 
 MAINTAINER etakouer <etakouer@student.42nice.fr>
 
+ARG MARIADB_V
+
 # update repository
 RUN apt-get -y update && \
 apt-get -y install software-properties-common gnupg2 && \
@@ -10,7 +12,7 @@ add-apt-repository "deb [arch=amd64] http://mariadb.mirror.liquidtelecom.com/rep
 apt-get -y update
 
 # install
-RUN apt-get -y install mariadb-server=1:10.6.4+maria~buster && \
+RUN apt-get -y install mariadb-server=1:$MARIADB_V+maria~buster && \
 apt-get -y install gettext-base && \
 apt-get clean -y
 

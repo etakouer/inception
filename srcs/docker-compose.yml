@@ -3,8 +3,11 @@ version: '3'
 services:
 
   mariadb:
-    build: ${DB_DIR} 
-    image: mariadb:10.6.4
+    build:
+      context: ${MARIADB_DIR} 
+      args:
+        MARIADB_V : ${MARIADB_V}
+    image: mariadb:${MARIADB_V}
     container_name: mariadb_c
     volumes:
       - mariadb_data:/var/lib/mysql
@@ -60,8 +63,11 @@ services:
   nginx:
     depends_on:
       - wordpress
-    build: ${NGINX_DIR} 
-    image: nginx:1.21.0
+    build: 
+      context: ${NGINX_DIR} 
+      args:
+        NGINX_V: ${NGINX_V}
+    image: nginx:${NGINX_V}
     container_name: nginx_c
     volumes:
       - ${NGINX_DIR}/conf/nginx.conf:/etc/nginx/nginx.conf

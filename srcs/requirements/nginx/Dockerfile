@@ -2,6 +2,8 @@ FROM debian:buster
 
 MAINTAINER etakouer <etakouer@student.42nice.fr>
 
+ARG NGINX_V
+
 # update repository
 RUN apt-get -y update && \
 echo "deb http://nginx.org/packages/mainline/debian buster nginx" > /etc/apt/sources.list.d/nginx.list && \
@@ -13,7 +15,7 @@ apt-key add nginx_signing.key && \
 apt-get -y update
 
 # install
-RUN apt-get -y install nginx=1.21.0-1~buster && \
+RUN apt-get -y install nginx=$NGINX_V-1~buster && \
 apt-get clean -y
 
 EXPOSE 443

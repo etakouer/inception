@@ -16,7 +16,7 @@
 - [x] cli wordpress
 - [x] ROOT\_PASS DB
 - [x] editor wp
-- [ ] workdir wordpress
+- [ ] workdir
 - [ ] persistance
 - [ ] ARG ..
 - [ ] generate ssl

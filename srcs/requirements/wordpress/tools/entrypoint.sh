@@ -1,13 +1,25 @@
 #!/bin/bash
 
-if ! test -f "/var/www/etakouer.42.fr/index.php";
+# test if wp not already installed
+if ! test -f "/var/www/${DOMAIN_NAME}/index.php";
 then
-  format=$(env | awk -F '=' '/WORDPRESS/ {printf "${%s} ",$1}')
-  envsubst "${format}" < /usr/src/wordpress/wp-config.php > /usr/src/wordpress/wp-config-sample.php
-  mv /usr/src/wordpress/wp-config-sample.php /usr/src/wordpress/wp-config.php 
-  cp -r /usr/src/wordpress/* /var/www/etakouer.42.fr/
-  chown -R www-data:www-data /var/www/etakouer.42.fr
-  chmod 777 /var/www/etakouer.42.fr
+
+  cd ${WP_SRC}
+  # create wp-config.php
+  wp config create --dbhost="${WORDPRESS_DB_HOST}" --dbname="${WORDPRESS_DB_NAME}" --dbuser="${WORDPRESS_DB_USER}" --dbpass="${WORDPRESS_DB_PASSWORD}" --dbprefix="wp_" --allow-root --skip-check
+
+  # configure wordpress
+  wp core install --url="https://${DOMAIN_NAME}/" --title="${WP_TITLE}" --admin_name="${WP_ADMIN_LOG}" --admin_email="${WP_ADMIN_EMAIL}" --admin_password="${WP_ADMIN_PASS}" --skip-email --allow-root
+  
+  # add an editor
+  wp user create "${WP_EDITOR_LOG}" "${WP_EDITOR_EMAIL}" --role="editor" --user_pass="${WP_EDITOR_PASS}" --allow-root
+
+  # allow rw for www-data
+  cp -r ${WP_SRC}/* /var/www/${DOMAIN_NAME}/
+  chown -R www-data:www-data /var/www/${DOMAIN_NAME}
+  chmod 777 /var/www/${DOMAIN_NAME}
 fi
+
+# start php-fpm deamon
 mkdir -p /run/php
-exec $@
+exec $(eval echo "$@")

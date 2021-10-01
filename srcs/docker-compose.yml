@@ -3,7 +3,7 @@ version: '3'
 services:
 
   mariadb:
-    build: ${MARIADB_DIR} 
+    build: ${DB_DIR} 
     image: mariadb:10.6.4
     container_name: mariadb_c
     volumes:
@@ -15,25 +15,44 @@ services:
       - MYSQL_DATABASE
     networks:
       - inception_network
-    restart : on-failure
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 3s
 
   wordpress:
     depends_on:
-      - mariadb
-    build: ${WORDPRESS_DIR} 
-    image: wordpress:5.8.1-php7.4-fpm
+      mariadb:
+        condition: service_healthy
+    build:
+      context: ${WP_DIR} 
+      args:
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        PHP_V : ${PHP_V} 
+        WP_V : ${WP_V} 
+        WP_SRC : ${WP_SRC} 
+    image: wordpress:${WP_V}-php${PHP_V}-fpm
     container_name: wordpress_c
     volumes:
-      - wordpress_data:/var/www/etakouer.42.fr
+      - wordpress_data:/var/www/${DOMAIN_NAME}
       - dynamic-site_data:/var/www/dynamic-site.42.fr
-      - ${WORDPRESS_DIR}/conf/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
-      - ${WORDPRESS_DIR}/conf/php.ini:/etc/php/7.4/fpm/php.ini
-
+      - ${WP_DIR}/conf/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - ${WP_DIR}/conf/php.ini:/etc/php/7.4/fpm/php.ini
     environment:
+      - DOMAIN_NAME
       - WORDPRESS_DB_HOST
       - WORDPRESS_DB_USER
       - WORDPRESS_DB_PASSWORD
       - WORDPRESS_DB_NAME
+      - WP_TITLE
+      - WP_ADMIN_LOG
+      - WP_ADMIN_PASS
+      - WP_ADMIN_EMAIL
+      - WP_EDITOR_LOG
+      - WP_EDITOR_PASS
+      - WP_EDITOR_EMAIL
+      - PHP_V
+      - WP_SRC
     networks:
       - inception_network
     restart : on-failure
@@ -57,6 +76,30 @@ services:
     networks:
       - inception_network
     restart : on-failure
+
+  # bonus 
+  
+  adminer:
+    depends_on:
+      - mariadb
+    image: adminer:4.8.1
+    container_name: adminer_c
+    restart: on-failure
+    ports:
+      - 8080:8080
+    networks:
+      - inception_network
+
+  redis:
+    depends_on:
+      - wordpress
+    image: redis:6.2.5
+    container_name: redis_c
+    restart: on-failure
+    volumes:
+      - redis_data:/data
+    networks:
+      - inception_network
 
 volumes:
 
@@ -92,6 +135,13 @@ volumes:
       o: "bind"
       device: "${DATA_PATH}/www/dynamic-site.42.fr"
 
+  redis_data:
+    name : "redis_data"
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${DATA_PATH}/redis"
   
   site_conf:
     name : "site_conf"

@@ -5,6 +5,9 @@ define print
 	echo -e $(GREEN)$(1)$(WHITE)
 endef
 
+DOMAIN = etakouer.42.fr static-site.42.fr dynamic-site.42.fr
+DATA_DIR = ${HOME}/data
+
 _C = docker ps -aq
 _I = docker images -aq
 _V = docker volume ls -q
@@ -21,8 +24,22 @@ all	: SHELL:=/bin/bash
 dclean	: SHELL:=/bin/bash
 up	: SHELL:=/bin/bash
 build	: SHELL:=/bin/bash
+init	: SHELL:=/bin/bash
 
 all     : dclean clean build up
+
+init 	:
+	@echo "- Create ${DATA_DIR}/mysql/"
+	@mkdir -p  ${DATA_DIR}/mysql/
+	@echo "- Create ${DATA_DIR}/log/nginx/"
+	@mkdir -p  ${DATA_DIR}/log/nginx/
+	@echo "- Create ${DATA_DIR}/redis/"
+	@mkdir -p  ${DATA_DIR}/redis/
+	@for d in $(DOMAIN); do echo "- Create ${DATA_DIR}/www/$$d/"; mkdir -p  ${DATA_DIR}/www/$$d ; done
+	@echo "- Give permission to ${DATA_DIR}/www"
+	@sudo chown -R www-data:www-data ${DATA_DIR}/www ; sudo chmod -R 777 ${DATA_DIR}/www 
+	@echo "- Add domain names in /etc/hosts :"
+	@for d in $(DOMAIN); do echo " 127.0.0.1 $$d"; grep "$$d" /etc/hosts > /dev/null || sudo bash -c "echo '127.0.0.1	$$d' >> /etc/hosts"; true; done
 
 up     	:
 	@$(call print,"- Docker-compose Up")

@@ -18,4 +18,4 @@ EXPOSE 6379
 
 WORKDIR /data
 
-ENTRYPOINT sleep infinity
+CMD ["redis-server", "/etc/redis/redis.conf"]

@@ -15,16 +15,18 @@ then
   wp user create "${WP_EDITOR_LOG}" "${WP_EDITOR_EMAIL}" --role="editor" --user_pass="${WP_EDITOR_PASS}" --allow-root
 
   # add redis plugin
-  wp config --allow-root set ENABLE_CACHE true --raw
+  wp config --allow-root set WP_CACHE true --raw
   wp config --allow-root set WP_REDIS_PORT 6379 --raw
   wp config --allow-root set WP_REDIS_HOST redis --raw
   wp plugin install redis-cache --activate --allow-root
+  wp redis enable --force --allow-root
 
   # allow rw for www-data
   cp -r ${WP_SRC}/* /var/www/${DOMAIN_NAME}/
   mkdir /var/www/${DOMAIN_NAME}/wp-content/cache 
   chown -R www-data:www-data /var/www/${DOMAIN_NAME}
   chmod 777 /var/www/${DOMAIN_NAME}
+
 fi
 
 # start php-fpm deamon

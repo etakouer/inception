@@ -112,6 +112,17 @@ services:
     networks:
       - inception_network
 
+#  redis:
+#    depends_on:
+#      - wordpress
+#    image: redis:6.2.5
+#    container_name: redis_c
+#    restart: on-failure
+#    volumes:
+#      - redis_data:/data
+#    networks:
+#      - inception_network
+
 volumes:
 
   mariadb_data:

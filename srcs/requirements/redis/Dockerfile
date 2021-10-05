@@ -4,15 +4,19 @@ MAINTAINER etakouer <etakouer@student.42nice.fr>
 
 ARG REDIS_V
 
-# update repository
+# Download from source
 RUN apt-get -y update && \
-apt-get -y install software-properties-common curl gnupg2 ; \
-curl https://packages.redis.io/gpg | apt-key add - ; \
-echo "deb https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list ; \
-apt-get -y update
+apt-get -y install build-essential wget pkg-config && \
+wget https://download.redis.io/releases/redis-$REDIS_V.tar.gz && \
+tar xzf redis-$REDIS_V.tar.gz && \
+rm redis-$REDIS_V.tar.gz && \ 
+mv redis-$REDIS_V redis
 
-# install
-RUN apt-get -y install redis
+# make
+RUN cd redis && \
+make && \
+cp src/redis-server /usr/bin/ && \
+cp src/redis-cli /usr/bin/
 
 EXPOSE 6379
 

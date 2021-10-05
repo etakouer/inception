@@ -88,7 +88,12 @@ services:
   adminer:
     depends_on:
       - mariadb
-    image: adminer:4.8.1
+    image: adminer:${ADMINER_V}
+    build:
+      context: ${ADMINER_DIR}
+      args:
+        ADMINER_V: ${ADMINER_V}
+        PHP_V : ${PHP_V} 
     container_name: adminer_c
     restart: on-failure
     ports:
@@ -111,17 +116,6 @@ services:
       - ${REDIS_DIR}/conf/redis.conf:/etc/redis/redis.conf
     networks:
       - inception_network
-
-#  redis:
-#    depends_on:
-#      - wordpress
-#    image: redis:6.2.5
-#    container_name: redis_c
-#    restart: on-failure
-#    volumes:
-#      - redis_data:/data
-#    networks:
-#      - inception_network
 
 volumes:
 

@@ -78,13 +78,11 @@ services:
       - dynamic-site_data:/var/www/dynamic-site.42.fr
       - site_ssl:/etc/ssl
     ports:
-      - 443:443
+      - "443:443"
     networks:
       - inception_network
     restart : on-failure
 
-  # bonus 
-  
   adminer:
     depends_on:
       - mariadb
@@ -97,7 +95,7 @@ services:
     container_name: adminer_c
     restart: on-failure
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - inception_network
 
@@ -116,6 +114,23 @@ services:
       - ${REDIS_DIR}/conf/redis.conf:/etc/redis/redis.conf
     networks:
       - inception_network
+
+  vsftpd:
+    image: vsftpd:${VSFTPD_V}
+    build:
+      context: ${VSFTPD_DIR}
+      args:
+        VSFTPD_V: ${VSFTPD_V}
+        ADMIN_LOG: ${WP_ADMIN_LOG}
+        ADMIN_PASS: ${WP_ADMIN_PASS}
+    container_name: vsftpd_c
+    ports:
+      - "20:20"
+      - "21:21"
+    restart: on-failure
+    volumes:
+      - wordpress_data:/home/${WP_ADMIN_LOG}/wordpress 
+      - ${VSFTPD_DIR}/conf/vsftpd.conf:/conf/vsftpd.conf
 
 volumes:
 

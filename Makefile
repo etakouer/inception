@@ -24,9 +24,31 @@ all	: SHELL:=/bin/bash
 dclean	: SHELL:=/bin/bash
 up	: SHELL:=/bin/bash
 build	: SHELL:=/bin/bash
+install	: SHELL:=/bin/bash
 init	: SHELL:=/bin/bash
 
 all     : dclean clean build up
+
+install :
+	@$(call print,"- Install docker")
+	sudo apt-get remove docker docker-engine docker.io containerd runc
+	sudo apt-get -y update
+	sudo apt-get -y install \
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	gnupg \
+	lsb-release
+	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	echo \
+  	"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	sudo apt-get -y update
+	sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+	@$(call print,"- Install docker compose")
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" \
+	-o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 init 	:
 	@echo "- Create ${DATA_DIR}/mysql/"

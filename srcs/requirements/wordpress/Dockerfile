@@ -25,8 +25,6 @@ chmod +x wp-cli.phar && \
 mv wp-cli.phar /usr/local/bin/wp && \
 wp core download --locale=fr_FR --version=$WP_V --path=$WP_SRC --allow-root
 
-EXPOSE 9000
-
 WORKDIR /var/www/$DOMAIN_NAME 
 
 COPY tools/entrypoint.sh /usr/bin/

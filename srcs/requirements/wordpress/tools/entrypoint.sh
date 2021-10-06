@@ -10,7 +10,7 @@ then
 
   # configure wordpress
   wp core install --url="https://${DOMAIN_NAME}/" --title="${WP_TITLE}" --admin_name="${WP_ADMIN_LOG}" --admin_email="${WP_ADMIN_EMAIL}" --admin_password="${WP_ADMIN_PASS}" --skip-email --allow-root
-  
+ 
   # add an editor
   wp user create "${WP_EDITOR_LOG}" "${WP_EDITOR_EMAIL}" --role="editor" --user_pass="${WP_EDITOR_PASS}" --allow-root
 

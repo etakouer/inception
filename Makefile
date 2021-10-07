@@ -31,7 +31,7 @@ all     : dclean clean build up
 
 install :
 	@$(call print,"- Install docker")
-	sudo apt-get remove docker docker-engine docker.io containerd runc
+	sudo apt-get remove docker docker-engine docker.io containerd runc ; true
 	sudo apt-get -y update
 	sudo apt-get -y install \
 	apt-transport-https \
@@ -41,11 +41,12 @@ install :
 	lsb-release
 	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 	echo \
-  	"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  	"deb [arch=$$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	sudo apt-get -y update
 	sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+	sudo usermod -a -G docker $$(whoami)
 	@$(call print,"- Install docker compose")
-	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" \
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$$(uname -s)-$$(uname -m)" \
 	-o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
 	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
@@ -61,7 +62,7 @@ init 	:
 	@echo "- Give permission to ${DATA_DIR}/www"
 	@sudo chown -R www-data:www-data ${DATA_DIR}/www ; sudo chmod -R 777 ${DATA_DIR}/www 
 	@echo "- Add domain names in /etc/hosts :"
-	@for d in $(DOMAIN); do echo " 127.0.0.1 $$d"; grep "$$d" /etc/hosts > /dev/null || sudo bash -c "echo '127.0.0.1	$$d' >> /etc/hosts"; true; done
+	@for d in $(DOMAIN); do echo " 127.0.0.1 $$d"; grep "$$d" /etc/hosts > /dev/null || sudo bash -c "echo '127.0.0.1 $$d' >> /etc/hosts"; true; done
 
 up     	:
 	@$(call print,"- Docker-compose Up")

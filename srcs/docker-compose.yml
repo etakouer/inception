@@ -130,7 +130,7 @@ services:
     restart: on-failure
     volumes:
       - wordpress_data:/home/${WP_ADMIN_LOG}/wordpress 
-      - ${VSFTPD_DIR}/conf/vsftpd.conf:/conf/vsftpd.conf
+      - ${VSFTPD_DIR}/conf/vsftpd.conf:/etc/vsftpd.conf
 
 volumes:
 

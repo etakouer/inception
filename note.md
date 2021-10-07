@@ -16,23 +16,16 @@
 - [x] cli wordpress
 - [x] ROOT\_PASS DB
 - [x] editor wp
-- [ ] workdir
-- [ ] persistance
-- [ ] ARG ..
-- [ ] generate ssl
+- [x] workdir
+- [x] persistance
+- [x] generate ssl
 
 #bonus
-- [ ] adminer
-- [ ] ftp
-- [ ] redis
-- [ ] static-site
+- [x] adminer
+- [x] ftp
+- [x] redis
+- [x] static-site
 - [ ] comment all
-
-#other
-- [ ] ip and network tests
-    - change http ssh host <=> vm
-    - docker <=> vm <=> host
-    - create a virtual network
 
 # mdp:
 root: Un+trois=4 

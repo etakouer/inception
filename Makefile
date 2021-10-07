@@ -27,7 +27,7 @@ build	: SHELL:=/bin/bash
 install	: SHELL:=/bin/bash
 init	: SHELL:=/bin/bash
 
-all     : dclean clean build up
+all     : clean up
 
 install :
 	@$(call print,"- Install docker")
@@ -66,7 +66,7 @@ init 	:
 
 up     	:
 	@$(call print,"- Docker-compose Up")
-	@cd srcs && docker-compose up -d 
+	@cd srcs && docker-compose -p inception up -d 
 
 build   : 
 	@$(call print,"- Docker-compose build")
@@ -85,11 +85,11 @@ fclean  : dclean clean
 	@[ $(NB_I) -ne 0 ] && docker rmi -f $$($(_I)); true
 
 dclean  :
-	@$(call print,"- Clean data (mysql, wordpress, nginx logs, redis cache)")
-	@sudo rm -rf /data/mysql/*
-	@sudo rm -rf /data/www/etakouer.42.fr/*
-	@sudo rm -rf /data/log/nginx/*
-	@sudo rm -rf /data/redis/*
+	@$(call print,"- Clean data (mysql, wordpress, nginx logs and redis)")
+	@sudo rm -rf ${DATA_DIR}/mysql/*
+	@sudo rm -rf ${DATA_DIR}/www/etakouer.42.fr/*
+	@sudo rm -rf ${DATA_DIR}/log/nginx/*
+	@sudo rm -rf ${DATA_DIR}/redis/*
 
 re	: fclean all
 

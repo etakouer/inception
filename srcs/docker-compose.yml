@@ -131,6 +131,8 @@ services:
     volumes:
       - wordpress_data:/home/${WP_ADMIN_LOG}/wordpress 
       - ${VSFTPD_DIR}/conf/vsftpd.conf:/etc/vsftpd.conf
+    networks:
+      - inception_network
 
 volumes:
 

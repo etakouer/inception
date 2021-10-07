@@ -18,6 +18,7 @@ apt-get -y install php$PHP_V-bcmath php$PHP_V-bz2 php$PHP_V-curl php$PHP_V-intl 
 apt-get -y install gettext-base && \
 apt-get clean -y
 
+# upload adminer
 RUN mkdir -p /var/www/html && \
 cd /var/www/html && \
 wget https://github.com/vrana/adminer/releases/download/v$ADMINER_V/adminer-$ADMINER_V.php -O index.php
@@ -26,4 +27,5 @@ EXPOSE 8080
 
 WORKDIR /var/www/html
 
+# start php intern server
 CMD ["php","-S","0.0.0.0:8080"]

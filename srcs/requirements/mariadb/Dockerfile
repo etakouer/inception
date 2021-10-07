@@ -16,6 +16,7 @@ RUN apt-get -y install mariadb-server=1:$MARIADB_V+maria~buster && \
 apt-get -y install gettext-base && \
 apt-get clean -y
 
+# copy mariadb config & entrypoint
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/entrypoint.sh /usr/bin/
 COPY tools/init.sql /tmp

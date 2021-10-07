@@ -18,8 +18,6 @@ make && \
 cp src/redis-server /usr/bin/ && \
 cp src/redis-cli /usr/bin/
 
-EXPOSE 6379
-
 WORKDIR /data
 
 CMD ["redis-server", "/etc/redis/redis.conf"]
